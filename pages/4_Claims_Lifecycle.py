@@ -4,95 +4,138 @@ st.set_page_config(layout="wide")
 st.title("Claims Lifecycle")
 
 st.markdown("""
-The claims lifecycle represents the financial journey of a healthcare service from clinical documentation 
-to payer reimbursement. Understanding this process is essential for preventing denials and optimizing cash flow.
+The Claims Lifecycle represents the full financial journey of a healthcare encounter—from documentation 
+to reimbursement. Understanding this lifecycle helps reduce denials and streamline revenue operations.
 """)
 
 st.markdown("---")
-st.header("Claims Lifecycle Stages")
+st.header("1. Clinical Documentation")
 
-st.subheader("1. Clinical Documentation")
 st.markdown("""
-Providers document diagnoses, procedures, medications, and all services rendered.  
-Accurate documentation is the foundation of correct coding and billing.
+Accurate documentation by providers is the foundation of successful billing.  
+Documentation must support medical necessity, coding, and payer requirements.
 """)
 
-st.subheader("2. Medical Coding")
 st.markdown("""
-- ICD-10: Diagnosis codes  
-- CPT: Procedure codes  
-- HCPCS: Supply, drug, and device codes  
-- Modifiers: Clarify circumstances of service  
+Examples of required documentation:
+- Diagnoses  
+- Procedures  
+- Medications  
+- Time-based services  
+- Imaging and lab reports  
 """)
 
-st.subheader("3. Charge Capture")
+st.markdown("---")
+st.header("2. Medical Coding")
+
 st.markdown("""
-Translation of services into billable charges.  
-Missed charges lead to revenue leakage.
+Coding translates clinical work into standardized billing codes.
 """)
 
-st.subheader("4. Claim Creation")
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader("ICD-10-CM")
+    st.markdown("Represents diagnoses and conditions.")
+
+with col2:
+    st.subheader("CPT / HCPCS")
+    st.markdown("""
+    CPT: Procedures performed  
+    HCPCS: Drugs, supplies, and additional services  
+    """)
+
+st.markdown("---")
+st.header("3. Charge Capture")
+
 st.markdown("""
-Claims are generated using standardized formats:
+Charge capture ensures that all provider services are converted into billable charges.  
+Missed charges result in lost revenue.
+""")
+
+st.markdown("---")
+st.header("4. Claim Creation")
+
+st.markdown("""
+Claims are generated using standard formats:
 - CMS-1500 (professional claims)  
 - UB-04 (facility claims)  
 """)
 
-st.subheader("5. Claim Submission")
 st.markdown("""
-Claims are sent to the payer through a clearinghouse, which performs initial edits for errors.
-""")
-
-st.subheader("6. Adjudication")
-st.markdown("""
-The payer determines:
-- What is covered  
-- What is denied  
-- Allowed amount  
-- Provider reimbursement  
-- Patient responsibility  
-""")
-
-st.subheader("7. Payment Posting")
-st.markdown("""
-Payments, adjustments, and patient liabilities are posted using the ERA (Electronic Remittance Advice).
-""")
-
-st.subheader("8. Denial Management")
-st.markdown("""
-Denied claims are analyzed, corrected, and resubmitted.  
-Common denial categories: eligibility, coding, medical necessity, authorization.
-""")
-
-st.subheader("9. Patient Billing")
-st.markdown("""
-Patients are billed for their portion after insurance payments.  
-Clear statements reduce confusion and improve collections.
+Claims must include:
+- Patient demographics  
+- Insurance information  
+- Diagnosis codes  
+- Procedure codes  
+- Provider information  
 """)
 
 st.markdown("---")
-st.header("What Makes a Claim 'Clean'?")
+st.header("5. Claim Submission")
 
 st.markdown("""
-A clean claim is one that contains no errors, requires no manual intervention, and is processed on the 
-first submission. Clean claim rates are a critical RCM performance metric.
-""")
-
-st.markdown("""
-**Clean claims require:**
-- Correct patient information  
-- Verified eligibility  
-- Accurate coding  
-- Valid authorization  
-- Correct modifiers  
-- Supported documentation  
-- Correct payer ID  
+Claims are transmitted to the payer through a clearinghouse.  
+Clearinghouses check for formatting errors before submitting to the payer.
 """)
 
 st.markdown("---")
-st.header("Why Claims Lifecycle Knowledge Matters")
+st.header("6. Payer Adjudication")
 
 st.markdown("""
-Understanding each step of the claims lifecycle allows RCM professionals to reduce denials, increase 
-reimbursement, and improve the financial health of the organization.
+Payers evaluate the claim based on:
+- Coverage rules  
+- Medical necessity  
+- Allowed amounts  
+- Fee schedules  
+- Coordination of benefits  
+""")
+
+st.markdown("""
+Possible outcomes:
+- Paid  
+- Partially paid  
+- Denied  
+- Additional information requested  
+""")
+
+st.markdown("---")
+st.header("7. Payment Posting")
+
+st.markdown("""
+Payments and adjustments are posted using an ERA (Electronic Remittance Advice).  
+Patient responsibility (copay, deductible, coinsurance) is also recorded.
+""")
+
+st.markdown("---")
+st.header("8. Denial Management")
+
+st.markdown("""
+Denied claims must be corrected and resubmitted.  
+This is one of the most resource-intensive RCM tasks.
+""")
+
+st.markdown("""
+Common denial reasons include:
+- Eligibility issues  
+- Missing authorization  
+- Coding errors  
+- Non-covered services  
+""")
+
+st.markdown("---")
+st.header("9. Patient Billing")
+
+st.markdown("""
+Patients receive a statement for their share of the cost after insurance processes the claim.  
+Clear communication improves patient satisfaction and reduces confusion.
+""")
+
+st.markdown("---")
+st.header("Why Understanding the Claims Lifecycle Matters")
+
+st.markdown("""
+- Improves clean claim rates  
+- Reduces rework  
+- Speeds up reimbursement  
+- Supports better compliance  
 """)
