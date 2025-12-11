@@ -1,118 +1,111 @@
 import streamlit as st
 
+# Navigation configuration
+NAV_ITEMS = [
+    ("Home", "rcm_billing_app.py"),
+    ("RCM Overview", "pages/1_RCM_Overview.py"),
+    ("Coverage & Eligibility", "pages/2_Coverage_and_Eligibility.py"),
+    ("Prior Authorization", "pages/3_Prior_Authorization.py"),
+    ("Claims Lifecycle", "pages/4_Claims_Lifecycle.py"),
+    ("Denials Management", "pages/5_Denials_Management.py"),
+    ("KPI Dashboard", "pages/10_RCM_KPI_Dashboard.py"),
+    ("AR Aging", "pages/11_AR_Aging_Dashboard.py"),
+    ("Provider Performance", "pages/13_Provider_Performance.py"),
+]
+
+SIMULATOR_ITEMS = [
+    ("Access Simulator", "pages/8_RCM_Access_Simulator.py"),
+    ("PA Outcome Simulator", "pages/14_PA_Outcome_Simulator.py"),
+    ("Claims Simulator", "pages/15_Claims_Adjudication_Simulator.py"),
+    ("Timeline Simulator", "pages/7_RCM_Timeline_Simulator.py"),
+]
+
+
 def show_navbar():
-    st.markdown("""
-    <style>
+    """Render the top navigation bar with dropdown menu."""
+    st.markdown(
+        """
+        <style>
+        .topnav {
+            background-color: #0047AB;
+            overflow: hidden;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+        .topnav a {
+            float: left;
+            color: white;
+            text-align: center;
+            padding: 10px 18px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .dropdown {
+            float: left;
+            overflow: hidden;
+        }
+        .dropdown .dropbtn {
+            cursor: pointer;
+            color: white;
+            background-color: inherit;
+            border: none;
+            outline: none;
+            padding: 10px 18px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #E8F0FF;
+            min-width: 180px;
+            border-radius: 6px;
+            margin-top: 4px;
+            z-index: 1;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+        }
+        .dropdown-content a {
+            float: none;
+            color: #0047AB;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            font-weight: 500;
+        }
+        .dropdown-content a:hover {
+            background-color: #dce7ff;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
-    /* MAIN HEADER BAR */
-    .hanvion-header {
-        background-color: #E8F4FB;
-        padding: 14px 28px;
-        border-bottom: 1px solid #c7e2f5;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: sticky;
-        top: 0;
-        z-index: 999;
-    }
+    nav_html = '<div class="topnav">'
 
-    .hanvion-title {
-        font-size: 22px;
-        font-weight: 600;
-        color: #003c63;
-        margin: 0;
-    }
+    # Add primary nav buttons
+    for label, page in NAV_ITEMS:
+        nav_html += f'<a href="/?page={page}">{label}</a>'
 
-    /* MENU LINKS */
-    .menu-link {
-        color: #003c63;
-        margin-right: 20px;
-        cursor: pointer;
-        font-size: 16px;
-        text-decoration: none;
-        font-weight: 500;
-    }
-    .menu-link:hover {
-        color: #2A7FDB;
-    }
+    # Add dropdown for simulators
+    nav_html += """
+        <div class="dropdown">
+            <button class="dropbtn">Simulators ▾</button>
+            <div class="dropdown-content">
+    """
 
-    /* DROPDOWN WRAPPER */
-    .dropdown {
-        position: relative;
-        display: inline-block;
-        margin-right: 20px;
-    }
+    for label, page in SIMULATOR_ITEMS:
+        nav_html += f'<a href="/?page={page}">{label}</a>'
 
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #FFFFFF;
-        min-width: 220px;
-        box-shadow: 0px 6px 12px rgba(0,0,0,0.1);
-        border-radius: 6px;
-        z-index: 1;
-        border: 1px solid #E2E8F0;
-    }
-
-    .dropdown-content a {
-        color: #003c63;
-        padding: 10px 16px;
-        text-decoration: none;
-        display: block;
-        font-size: 15px;
-    }
-
-    .dropdown-content a:hover {
-        background-color: #E8F4FB;
-        color: #2A7FDB;
-    }
-
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
-
-    </style>
-
-    <div class="hanvion-header">
-        <div class="hanvion-title">Hanvion Health</div>
-
-        <div>
-            <!-- EDUCATION MENU -->
-            <div class="dropdown">
-                <span class="menu-link">Education ▼</span>
-                <div class="dropdown-content">
-                    <a href="/?page=1_RCM_Overview">RCM Overview</a>
-                    <a href="/?page=2_Coverage_and_Eligibility">Coverage & Eligibility</a>
-                    <a href="/?page=3_Prior_Authorization">Prior Authorization</a>
-                    <a href="/?page=4_Claims_Lifecycle">Claims Lifecycle</a>
-                    <a href="/?page=6_Denials_Management">Denials Management</a>
-                    <a href="/?page=7_OOP_Cost_Education">Cost Education</a>
-                </div>
-            </div>
-
-            <!-- SIMULATORS MENU -->
-            <div class="dropdown">
-                <span class="menu-link">Simulators ▼</span>
-                <div class="dropdown-content">
-                    <a href="/?page=8_RCM_Timeline_Simulator">RCM Timeline Simulator</a>
-                    <a href="/?page=9_RCM_Access_Simulator">Access Journey Simulator</a>
-                    <a href="/?page=13_PA_Outcome_Simulator">PA Outcome Simulator</a>
-                    <a href="/?page=14_Claims_Adjudication_Simulator">Claims Adjudication Simulator</a>
-                </div>
-            </div>
-
-            <!-- ANALYTICS MENU -->
-            <div class="dropdown">
-                <span class="menu-link">Analytics ▼</span>
-                <div class="dropdown-content">
-                    <a href="/?page=10_Billing_and_Denials_Insights">Billing & Denials Insights</a>
-                    <a href="/?page=11_RCM_KPI_Dashboard">RCM KPI Dashboard</a>
-                    <a href="/?page=12_AR_Aging_Dashboard">AR Aging Dashboard</a>
-                    <a href="/?page=15_Provider_Performance">Provider Performance</a>
-                </div>
+    nav_html += """
             </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """
 
+    st.markdown(nav_html, unsafe_allow_html=True)
