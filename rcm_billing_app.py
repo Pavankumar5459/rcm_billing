@@ -1,94 +1,52 @@
 import streamlit as st
+from utils.navigation import show_navbar
 
-# -------------------------------------------------
-# STREAMLIT CONFIG
-# -------------------------------------------------
+# Load the global top navigation bar
+show_navbar()
+
+# Page configuration
 st.set_page_config(
     page_title="Hanvion Health – RCM Education Platform",
-    layout="wide"
+    layout="wide",
 )
 
-# -------------------------------------------------
-# REMOVE SIDEBAR COMPLETELY
-# -------------------------------------------------
-st.markdown("""
-<style>
-    [data-testid="stSidebar"] {display: none !important;}
-    [data-testid="stSidebarNav"] {display: none !important;}
-    [data-testid="collapsedControl"] {display: none !important;}
-    .block-container {padding-left: 2rem !important; padding-right: 2rem !important;}
-</style>
-""", unsafe_allow_html=True)
-
-# -------------------------------------------------
-# HEADER
-# -------------------------------------------------
-st.markdown("""
-<div style="
-    background: linear-gradient(90deg, #0EA5E9, #2563EB);
-    padding: 30px;
-    border-radius: 12px;
-    margin-bottom: 20px;">
-    <h1 style="color: white; margin-bottom: 5px;">
-        Hanvion Health – RCM Education Platform
-    </h1>
-    <p style="color: white; font-size: 16px;">
-        Interactive modules and analytics explaining patient access, insurance reimbursement, denials, and billing workflows.
-    </p>
-</div>
-""", unsafe_allow_html=True)
-
-# -------------------------------------------------
-# EDUCATION MODULES
-# -------------------------------------------------
-st.subheader("Educational Modules")
-
-col1, col2 = st.columns(2)
-
-modules = [
-    ("RCM Overview", "Learn the complete revenue cycle workflow.",
-        "pages/1_RCM_Overview.py"),
-
-    ("Coverage & Eligibility", "Understand benefit checks and patient responsibility.",
-        "pages/2_Coverage_and_Eligibility.py"),
-
-    ("Prior Authorization", "Learn authorization workflows and payer criteria.",
-        "pages/3_Prior_Authorization.py"),
-
-    ("Claims Lifecycle", "Understand how claims are created, submitted, and adjudicated.",
-        "pages/4_Claims_Lifecycle.py"),
-
-    ("Denials Management", "Learn denial categories, root causes, and appeals.",
-        "pages/6_Denials_Management.py"),
-
-    ("Out-of-Pocket Cost Education", "Teach patients about deductibles, copays, and coinsurance.",
-        "pages/7_OOP_Cost_Education.py"),
-
-    ("RCM Timeline Simulator", "Interactive step-by-step revenue cycle walkthrough.",
-        "pages/8_RCM_Timeline_Simulator.py"),
-
-    ("Patient Access Journey Simulator", "Simulated workflow: eligibility → PA → claims → appeals.",
-        "pages/9_RCM_Access_Simulator.py"),
-
-    ("Billing & Denials Data Insights", 
-     "Use Medicare datasets to understand denial patterns, payment gaps, and service utilization.",
-     "pages/10_Billing_and_Denials_Insights.py")
-]
-
-# -------------------------------------------------
-# DISPLAY MODULE CARDS
-# -------------------------------------------------
-for idx, (title, desc, path) in enumerate(modules):
-    with (col1 if idx % 2 == 0 else col2):
-        st.markdown(f"""
-        <div style="border:1px solid #E5E7EB; padding:18px; border-radius:10px;
-                    background:#FFFFFF; margin-bottom:20px;">
-            <h3 style="margin:0 0 6px 0;">{title}</h3>
-            <p style="margin:0 0 12px 0; color:#475569;">{desc}</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-        st.page_link(path, label="Open Module")
+# Title Section
+st.title("Hanvion Health – RCM Education Platform")
+st.write("Interactive training modules explaining the full patient access and reimbursement pathway.")
 
 st.markdown("---")
-st.write("Select any module above to start learning about the patient access and reimbursement process.")
+
+# -------- MODULE DEFINITIONS (DO NOT CHANGE FILENAMES) -------- #
+modules = [
+    ("RCM Overview", "1_RCM_Overview.py", "Learn the end-to-end revenue cycle workflow."),
+    ("Coverage & Eligibility", "2_Coverage_and_Eligibility.py", "Understand benefit checks and patient responsibility."),
+    ("Prior Authorization", "3_Prior_Authorization.py", "Learn authorization workflows and payer requirements."),
+    ("Claims Lifecycle", "4_Claims_Lifecycle.py", "Understand how claims are created, submitted, and adjudicated."),
+    ("Denials Management", "5_Denials_Management.py", "Learn denial categories, root causes, and appeals."),
+    ("Out-of-Pocket Cost Education", "6_OOP_Cost_Education.py", "Explain deductibles, coinsurance, and patient liability."),
+    ("RCM Timeline Simulator", "7_RCM_Timeline_Simulator.py", "Simulate a step-by-step patient access journey."),
+    ("Access Simulator", "8_RCM_Access_Simulator.py", "Walk through benefits verification to claim submission."),
+    ("Billing & Denials Insights", "9_Billing_and_Denials_Insights.py", "Visualize trends in denials and billing outcomes."),
+    ("KPI Dashboard", "10_RCM_KPI_Dashboard.py", "Track operational performance and revenue metrics."),
+    ("AR Aging Dashboard", "11_AR_Aging_Dashboard.py", "Analyze outstanding AR buckets and trends."),
+    ("Denials Dashboard", "12_Denials_Dashboard.py", "Review denial types and actionable root causes."),
+    ("Provider Performance", "13_Provider_Performance.py", "Compare provider utilization and efficiency."),
+    ("PA Outcome Simulator", "14_PA_Outcome_Simulator.py", "Predict approval vs denial based on rules."),
+    ("Claims Adjudication Simulator", "15_Claims_Adjudication_Simulator.py", "Understand how payers adjudicate claims."),
+]
+
+# -------- FRONT-END MODULE DISPLAY -------- #
+st.header("Educational Modules")
+
+# Display in a grid layout
+cols_per_row = 2
+for i in range(0, len(modules), cols_per_row):
+    row_modules = modules[i:i + cols_per_row]
+    cols = st.columns(cols_per_row)
+
+    for col, (title, file, desc) in zip(cols, row_modules):
+        with col:
+            st.subheader(title)
+            st.write(desc)
+            st.page_link(f"pages/{file}", label="Open Module")
+            st.markdown("---")
