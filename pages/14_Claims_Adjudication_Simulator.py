@@ -1,1 +1,0 @@
-# Claims_Adjudication_Simulator placeholder
