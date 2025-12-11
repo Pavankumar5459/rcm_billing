@@ -1,87 +1,129 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import os
-import glob
+import requests
+import re
 
-# Folder where CMS RY25 files live
-DATA_FOLDER = "cms_data"
+# ============================================================
+#   GOOGLE DRIVE FOLDER AUTO-LOADER (STREAMLIT SAFE)
+# ============================================================
 
-# -------------------------------
-# AUTO-DETECTION HELPERS
-# -------------------------------
+@st.cache_data(show_spinner=True)
+def list_drive_files(folder_id):
+    """
+    Lists all files in a Google Drive folder using the public folder view.
+    Works WITHOUT Google API keys.
+    """
 
-def find_file(pattern):
-    """Return first file that matches the pattern in cms_data."""
-    files = glob.glob(os.path.join(DATA_FOLDER, pattern), recursive=True)
-    if files:
-        return files[0]
-    return None
+    url = f"https://drive.google.com/embeddedfolderview?id={folder_id}#list"
+
+    try:
+        html = requests.get(url).text
+    except Exception as e:
+        st.error(f"Failed to read Google Drive folder: {e}")
+        return []
+
+    # File pattern extraction
+    file_pattern = r"\/file\/d\/([a-zA-Z0-9_-]+)"
+    file_ids = re.findall(file_pattern, html)
+
+    files = list(set(file_ids))
+    return files
 
 
-def load_csv(pattern):
-    """Loads CSV using CMS auto filename detection."""
-    file = find_file(pattern)
-    if not file:
-        st.warning(f"Missing file for pattern: {pattern}")
+def download_drive_file(file_id):
+    """
+    Downloads a file from Drive directly using the file ID.
+    Works for CSV, Excel, and everything else.
+    """
+
+    url = f"https://drive.google.com/uc?id={file_id}&export=download"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.content
+    except Exception as e:
+        st.error(f"Failed downloading file {file_id}: {e}")
+        return None
+
+
+@st.cache_data(show_spinner=True)
+def load_drive_csv(file_id):
+    """Loads CSV file from Google Drive."""
+    content = download_drive_file(file_id)
+    if content is None:
         return None
     try:
-        df = pd.read_csv(file, low_memory=False)
-        return df
+        return pd.read_csv(pd.io.common.BytesIO(content), low_memory=False)
     except Exception as e:
-        st.error(f"Error reading {file}: {e}")
+        st.error(f"CSV parsing error: {e}")
         return None
 
 
-def load_excel(pattern):
-    """Loads Excel file using CMS naming patterns."""
-    file = find_file(pattern)
-    if not file:
-        st.warning(f"Missing file for pattern: {pattern}")
+@st.cache_data(show_spinner=True)
+def load_drive_excel(file_id):
+    """Loads Excel file from Google Drive."""
+    content = download_drive_file(file_id)
+    if content is None:
         return None
     try:
-        return pd.read_excel(file)
+        return pd.read_excel(pd.io.common.BytesIO(content))
     except Exception as e:
-        st.error(f"Error reading {file}: {e}")
+        st.error(f"Excel parsing error: {e}")
         return None
 
 
-# -------------------------------
-# MAIN DATA LOADERS (RY25)
-# -------------------------------
+# ============================================================
+# AUTO DETECT CMS FILES
+# ============================================================
 
-def load_provider_data():
+def detect_cms_files(folder_id):
     """
-    Auto-detect CMS Provider RY25 file.
-    Example filenames:
-    - MUP_PHY_R25_P05_V20_D23_Prov.csv
+    Detects CMS RY25 provider, geo, and POS files automatically
+    using keyword pattern matching.
     """
-    df = load_csv("*Prov*.csv")
+
+    file_ids = list_drive_files(folder_id)
+    provider_file = None
+    geo_file = None
+    pos_file = None
+
+    for fid in file_ids:
+        # Try downloading metadata to inspect filename
+        meta_url = f"https://drive.google.com/file/d/{fid}/view"
+        filename = meta_url  # used for pattern matching
+
+        # Detect provider dataset
+        if "prov" in filename.lower() or "provider" in filename.lower():
+            provider_file = fid
+
+        # Detect geography dataset
+        if "geo" in filename.lower():
+            geo_file = fid
+
+        # Detect POS table
+        if "pos" in filename.lower() or filename.lower().endswith(".xlsx"):
+            pos_file = fid
+
+    return provider_file, geo_file, pos_file
+
+
+# ============================================================
+#  MAIN LOADER FUNCTIONS
+# ============================================================
+
+def load_provider_data(folder_id):
+    provider_file, _, _ = detect_cms_files(folder_id)
+
+    if provider_file is None:
+        st.error("Provider RY25 dataset not found in Drive folder.")
+        return None
+
+    df = load_drive_csv(provider_file)
     if df is None:
         return None
-    df = clean_provider_df(df)
-    df = filter_latest_year(df)
-    return df
 
-
-def load_geo_data():
-    """Auto-detect CMS Geography or Service-level geo file."""
-    df = load_csv("*Geo*.csv")
-    return df
-
-
-def load_pos_data():
-    """Auto-detect POS Excel (fee schedule, place of service)."""
-    df = load_excel("*POS*.xlsx")
-    return df
-
-
-# -------------------------------
-# CLEANING & STANDARDIZATION
-# -------------------------------
-
-def clean_provider_df(df):
-    """Normalize CMS provider dataset for analytics & dashboards."""
     df.columns = df.columns.str.lower()
 
     rename_map = {
@@ -96,75 +138,28 @@ def clean_provider_df(df):
     }
     df = df.rename(columns={k: v for k, v in rename_map.items() if k in df.columns})
 
-    numeric_cols = [
-        "submitted_charge", "allowed_amount", "payment_amount",
-        "service_count", "line_count"
-    ]
+    # Clean numeric fields
+    numeric_cols = ["submitted_charge", "allowed_amount", "payment_amount",
+                    "line_count", "service_count"]
+
     for col in numeric_cols:
-        if col in df.columns:
+        if col in df:
             df[col] = pd.to_numeric(df[col], errors="coerce")
 
     return df
 
 
-def filter_latest_year(df):
-    """If CMS dataset contains multiple years, keep the most recent."""
-    year_cols = [c for c in df.columns if "yr" in c or "year" in c]
-
-    if not year_cols:
-        return df  # assume RY25-only file
-
-    col = year_cols[0]
-    max_year = df[col].max()
-    return df[df[col] == max_year]
-
-
-# -------------------------------
-# KPI METRICS
-# -------------------------------
-
-def compute_kpis(df):
-    """Compute KPI metrics for dashboard."""
-    kpis = {}
-    kpis['total_claims'] = int(df["line_count"].sum()) if "line_count" in df else 0
-
-    if "allowed_amount" in df:
-        kpis["avg_allowed"] = round(df["allowed_amount"].mean(), 2)
-    else:
-        kpis["avg_allowed"] = None
-
-    if "payment_amount" in df:
-        kpis["fpr_rate"] = round(
-            (df["payment_amount"] > 0).mean() * 100, 2
-        )
-        kpis["denial_rate"] = round(
-            100 - kpis["fpr_rate"], 2
-        )
-    else:
-        kpis["fpr_rate"] = None
-        kpis["denial_rate"] = None
-
-    kpis["service_volume"] = int(df["service_count"].sum()) if "service_count" in df else 0
-
-    return kpis
-
-
-# -------------------------------
-# AR AGING ESTIMATION
-# -------------------------------
-
-def compute_ar_aging(df):
-    """Estimate AR aging buckets based on Medicare payment ratios."""
-    if "payment_amount" not in df or "allowed_amount" not in df:
+def load_geo_data(folder_id):
+    _, geo_file, _ = detect_cms_files(folder_id)
+    if geo_file is None:
+        st.warning("Geo dataset not found in Drive folder.")
         return None
+    return load_drive_csv(geo_file)
 
-    ratio = df["payment_amount"] / df["allowed_amount"]
-    ratio = ratio.replace([np.inf, -np.inf], np.nan).dropna()
 
-    return {
-        "0–30 days": round((ratio > 0.90).mean() * 100, 2),
-        "31–60 days": round((ratio.between(0.75, 0.90)).mean() * 100, 2),
-        "61–90 days": round((ratio.between(0.50, 0.75)).mean() * 100, 2),
-        "90–120 days": round((ratio.between(0.25, 0.50)).mean() * 100, 2),
-        "120+ days": round((ratio < 0.25).mean() * 100, 2),
-    }
+def load_pos_data(folder_id):
+    _, _, pos_file = detect_cms_files(folder_id)
+    if pos_file is None:
+        st.warning("POS dataset not found in Drive folder.")
+        return None
+    return load_drive_excel(pos_file)
