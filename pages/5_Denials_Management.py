@@ -1,70 +1,33 @@
-from utils.navigation import show_navbar
-show_navbar()
 import streamlit as st
+from utils.navigation import show_navbar
+from utils.ui_components import centered_header, section_title, info_block
 
-st.set_page_config(layout="wide")
-st.title("Denials Management")
+show_navbar()
+centered_header("Denials Management")
 
-st.markdown("""
-Denials occur when payers do not approve part or all of a claim.  
-Effective denials management ensures that organizations recover lost revenue and prevent future denials.
+section_title("Major Denial Categories")
+info_block("""
+**1. Eligibility Denials:** Coverage inactive or plan mismatch.  
+**2. Authorization Denials:** Missing PA or expired approval.  
+**3. Coding Denials:** Incorrect CPT/ICD, missing modifiers, unbundling.  
+**4. Medical Necessity:** Insufficient documentation for the service.  
+**5. Timely Filing:** Claim not submitted within payer rules.  
 """)
 
-st.markdown("---")
-st.header("Types of Denials")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    st.subheader("Hard Denials")
-    st.markdown("""
-    Cannot be corrected or resubmitted.  
-    Results in permanent loss of revenue.
-    """)
-
-with col2:
-    st.subheader("Soft Denials")
-    st.markdown("""
-    Can be corrected with additional documentation or coding adjustments.
-    """)
-
-st.markdown("---")
-st.header("Common Denial Categories")
-
-st.markdown("""
-- Eligibility-related  
-- Authorization missing  
-- Coding errors  
-- Non-covered services  
-- Bundling or rebundling issues  
-- Medical necessity not met  
+section_title("Appeal Strategies")
+st.write("""
+- Include detailed clinical notes  
+- Use correct appeal forms  
+- Reference payer policies  
+- Submit within time limits  
+- Support claims with evidence-based guidelines  
 """)
 
-st.markdown("---")
-st.header("Denial Resolution Workflow")
-
-st.markdown("""
-1. Identify denial reason  
-2. Review payer explanation (EOB/ERA)  
-3. Correct coding or documentation  
-4. Submit appeal or corrected claim  
-5. Track payer response  
-""")
-
-st.markdown("---")
-st.header("Preventing Denials")
-
-st.markdown("""
-- Verify eligibility before service  
-- Confirm authorization rules  
-- Ensure accurate documentation  
-- Use coding audits  
-- Monitor denial trends  
-""")
-
-st.markdown("---")
-st.header("Why Denials Management Matters")
-
-st.markdown("""
-A robust denials strategy recovers lost revenue, reduces rework, and improves overall financial performance.
+section_title("Root Cause Prevention")
+st.write("""
+Effective denials management includes:  
+- Training staff  
+- Automating eligibility  
+- Pre-claim scrubbing  
+- Strong documentation workflows  
 """)
