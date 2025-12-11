@@ -1,52 +1,159 @@
 import streamlit as st
 from utils.navigation import show_navbar
+from utils.ui_components import centered_header
 
-# Load the global top navigation bar
-show_navbar()
-
-# Page configuration
+# -----------------------------------------------------------
+# PAGE CONFIG
+# -----------------------------------------------------------
 st.set_page_config(
     page_title="Hanvion Health – RCM Education Platform",
+    page_icon="💠",
     layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-# Title Section
-st.title("Hanvion Health – RCM Education Platform")
-st.write("Interactive training modules explaining the full patient access and reimbursement pathway.")
+# Hide sidebar completely
+hide_sidebar = """
+<style>
+[data-testid="stSidebar"] {display: none;}
+</style>
+"""
+st.markdown(hide_sidebar, unsafe_allow_html=True)
 
-st.markdown("---")
+# Top Navigation Bar
+show_navbar()
 
-# -------- MODULE DEFINITIONS (DO NOT CHANGE FILENAMES) -------- #
-modules = [
-    ("RCM Overview", "1_RCM_Overview.py", "Learn the end-to-end revenue cycle workflow."),
-    ("Coverage & Eligibility", "2_Coverage_and_Eligibility.py", "Understand benefit checks and patient responsibility."),
-    ("Prior Authorization", "3_Prior_Authorization.py", "Learn authorization workflows and payer requirements."),
-    ("Claims Lifecycle", "4_Claims_Lifecycle.py", "Understand how claims are created, submitted, and adjudicated."),
-    ("Denials Management", "5_Denials_Management.py", "Learn denial categories, root causes, and appeals."),
-    ("Out-of-Pocket Cost Education", "6_OOP_Cost_Education.py", "Explain deductibles, coinsurance, and patient liability."),
-    ("RCM Timeline Simulator", "7_RCM_Timeline_Simulator.py", "Simulate a step-by-step patient access journey."),
-    ("Access Simulator", "8_RCM_Access_Simulator.py", "Walk through benefits verification to claim submission."),
-    ("Billing & Denials Insights", "9_Billing_and_Denials_Insights.py", "Visualize trends in denials and billing outcomes."),
-    ("KPI Dashboard", "10_RCM_KPI_Dashboard.py", "Track operational performance and revenue metrics."),
-    ("AR Aging Dashboard", "11_AR_Aging_Dashboard.py", "Analyze outstanding AR buckets and trends."),
-    ("Denials Dashboard", "12_Denials_Dashboard.py", "Review denial types and actionable root causes."),
-    ("Provider Performance", "13_Provider_Performance.py", "Compare provider utilization and efficiency."),
-    ("PA Outcome Simulator", "14_PA_Outcome_Simulator.py", "Predict approval vs denial based on rules."),
-    ("Claims Adjudication Simulator", "15_Claims_Adjudication_Simulator.py", "Understand how payers adjudicate claims."),
-]
+# -----------------------------------------------------------
+# HOME PAGE UI
+# -----------------------------------------------------------
 
-# -------- FRONT-END MODULE DISPLAY -------- #
-st.header("Educational Modules")
+centered_header("Hanvion Health – Revenue Cycle Intelligence Platform")
 
-# Display in a grid layout
-cols_per_row = 2
-for i in range(0, len(modules), cols_per_row):
-    row_modules = modules[i:i + cols_per_row]
-    cols = st.columns(cols_per_row)
+st.write(
+    """
+Welcome to the **Hanvion RCM Education Platform**.  
+Explore interactive modules that teach and visualize:
 
-    for col, (title, file, desc) in zip(cols, row_modules):
-        with col:
-            st.subheader(title)
-            st.write(desc)
-            st.page_link(f"pages/{file}", label="Open Module")
-            st.markdown("---")
+- End-to-end Revenue Cycle Management  
+- Coverage & Eligibility  
+- Prior Authorization  
+- Claims Lifecycle & Adjudication  
+- Denials Management  
+- KPI Dashboards & Analytics  
+- AR Aging  
+- Provider Performance  
+- Real-world RCM Simulators  
+    """
+)
+
+st.write("---")
+
+# -----------------------------------------------------------
+# EDUCATIONAL MODULE CARDS
+# -----------------------------------------------------------
+
+def module_card(title, description, page):
+    cols = st.columns([3, 1])
+    with cols[0]:
+        st.subheader(title)
+        st.write(description)
+    with cols[1]:
+        st.page_link(page, label="Open Module", use_container_width=True)
+    st.write("")
+
+
+st.markdown("### Educational Modules")
+
+module_card(
+    "RCM Overview",
+    "Learn the end-to-end revenue cycle workflow.",
+    "pages/1_RCM_Overview.py",
+)
+
+module_card(
+    "Coverage & Eligibility",
+    "Understand payer benefits, verification rules, and patient responsibility.",
+    "pages/2_Coverage_and_Eligibility.py",
+)
+
+module_card(
+    "Prior Authorization",
+    "Review authorization workflows and common reasons for denial.",
+    "pages/3_Prior_Authorization.py",
+)
+
+module_card(
+    "Claims Lifecycle",
+    "See how claims move through submission, adjudication, and payment.",
+    "pages/4_Claims_Lifecycle.py",
+)
+
+module_card(
+    "Denials Management",
+    "Identify major denial types, root causes, and appeal strategies.",
+    "pages/5_Denials_Management.py",
+)
+
+module_card(
+    "OOP Cost Education",
+    "Learn about copays, deductibles, coinsurance, and patient responsibility.",
+    "pages/6_OOP_Cost_Education.py",
+)
+
+
+st.write("---")
+st.markdown("### Analytics Dashboards")
+
+module_card(
+    "KPI Dashboard",
+    "Track key RCM metrics including denial rate, clean claim rate, and financial KPIs.",
+    "pages/10_RCM_KPI_Dashboard.py",
+)
+
+module_card(
+    "AR Aging Dashboard",
+    "Visualize accounts receivable buckets and collection patterns.",
+    "pages/11_AR_Aging_Dashboard.py",
+)
+
+module_card(
+    "Provider Performance",
+    "Analyze provider utilization, RVUs, geographic adjustments, and payment patterns.",
+    "pages/13_Provider_Performance.py",
+)
+
+
+st.write("---")
+st.markdown("### Simulators")
+
+module_card(
+    "RCM Timeline Simulator",
+    "Simulate the patient's journey from scheduling → eligibility → PA → claim → payment.",
+    "pages/7_RCM_Timeline_Simulator.py",
+)
+
+module_card(
+    "Access Simulator",
+    "Evaluate eligibility, documentation completeness, and approval probability.",
+    "pages/8_RCM_Access_Simulator.py",
+)
+
+module_card(
+    "PA Outcome Simulator",
+    "Simulate prior authorization results and payer decision steps.",
+    "pages/14_PA_Outcome_Simulator.py",
+)
+
+module_card(
+    "Claims Adjudication Simulator",
+    "Simulate payer adjudication, denials, appeals, and payment accuracy.",
+    "pages/15_Claims_Adjudication_Simulator.py",
+)
+
+
+# -----------------------------------------------------------
+# FOOTER
+# -----------------------------------------------------------
+st.write("---")
+st.caption("Hanvion Health © 2025 • Revenue Cycle Education & Intelligence Platform")
+
