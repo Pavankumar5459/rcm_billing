@@ -7,27 +7,28 @@ st.set_page_config(layout="wide")
 st.title("Medicare Geographic Analytics")
 
 st.markdown("""
-This module provides geographic insights into Medicare utilization patterns based on sample data.  
-Geographic analysis highlights how reimbursement and service volume vary across states.
+This dashboard provides geographic-level Medicare insights using a sample dataset.  
+Data loads automatically from the **sample_data** directory without any file uploads.
 """)
 
-st.markdown("---")
-st.header("Data Loading")
-
+# -------------------------------------------------
+# Auto-load data
+# -------------------------------------------------
 geo_path = Path("sample_data/geo_sample.csv")
 
 if geo_path.exists():
     df = pd.read_csv(geo_path)
-    st.success("Geographic sample data loaded successfully.")
+    st.success("Geographic sample dataset loaded successfully.")
 else:
-    st.error("Geo dataset not found. Please verify the file location.")
+    st.error("Geographic sample CSV not found in /sample_data.")
     st.stop()
 
-st.write("### Preview of Dataset")
+st.markdown("---")
+st.subheader("Dataset Preview")
 st.dataframe(df.head(), use_container_width=True)
 
 st.markdown("---")
-st.header("Dataset Information")
+st.subheader("Dataset Summary")
 
 col1, col2, col3 = st.columns(3)
 col1.metric("Rows", df.shape[0])
@@ -35,58 +36,53 @@ col2.metric("Columns", df.shape[1])
 col3.metric("Missing Values", df.isna().sum().sum())
 
 st.markdown("---")
-
-expected_columns = ["state", "allowed_amount", "paid_amount", "hcpcs_code"]
-for col in expected_columns:
-    if col not in df.columns:
-        st.warning(f"Missing expected column: {col}")
-
 st.header("Allowed Amount by State")
 
 if "state" in df.columns and "allowed_amount" in df.columns:
-    state_summary = df.groupby("state")["allowed_amount"].sum().reset_index()
+    allowed_state = df.groupby("state")["allowed_amount"].sum().reset_index()
 
     chart = (
-        alt.Chart(state_summary)
+        alt.Chart(allowed_state)
         .mark_bar()
         .encode(
-            x=alt.X("allowed_amount:Q", title="Total Allowed Amount"),
+            x="allowed_amount:Q",
             y=alt.Y("state:N", sort="-x"),
-            tooltip=["state", "allowed_amount"],
+            tooltip=["state", "allowed_amount"]
+        )
+    )
+    st.altair_chart(chart, use_container_width=True)
+else:
+    st.info("State or allowed_amount column missing.")
+
+st.markdown("---")
+st.header("Paid Amount by State")
+
+if "state" in df.columns and "paid_amount" in df.columns:
+    paid_state = df.groupby("state")["paid_amount"].sum().reset_index()
+
+    chart = (
+        alt.Chart(paid_state)
+        .mark_bar(color="#2563EB")
+        .encode(
+            x="paid_amount:Q",
+            y=alt.Y("state:N", sort="-x"),
+            tooltip=["state", "paid_amount"]
         )
     )
     st.altair_chart(chart, use_container_width=True)
 
 st.markdown("---")
-st.header("Paid Amount by State")
+st.header("Top HCPCS Codes Nationally")
 
-if "paid_amount" in df.columns:
-    state_paid = df.groupby("state")["paid_amount"].sum().reset_index()
-
-    chart_paid = (
-        alt.Chart(state_paid)
-        .mark_bar(color="#2563EB")
-        .encode(
-            x="paid_amount:Q",
-            y=alt.Y("state:N", sort="-x"),
-            tooltip=["state", "paid_amount"],
-        )
-    )
-    st.altair_chart(chart_paid, use_container_width=True)
-
-st.markdown("---")
-st.header("Top HCPCS Codes by State")
-
-if "hcpcs_code" in df.columns:
-    top_hcpcs = (
+if "hcpcs_code" in df.columns and "allowed_amount" in df.columns:
+    hcpcs_top = (
         df.groupby("hcpcs_code")["allowed_amount"]
         .sum()
         .reset_index()
-        .sort_values(by="allowed_amount", ascending=False)
+        .sort_values("allowed_amount", ascending=False)
     )
 
-    st.write("### Top HCPCS Codes Nationally")
-    st.dataframe(top_hcpcs.head(20), use_container_width=True)
+    st.dataframe(hcpcs_top.head(20), use_container_width=True)
 
 st.markdown("---")
-st.write("This module is designed to scale with full CMS data for live analytic dashboards.")
+st.write("This module scales automatically when real CMS datasets are added.")
