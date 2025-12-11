@@ -1,143 +1,20 @@
-from utils.navigation import show_navbar
-show_navbar()
 import streamlit as st
+from utils.navigation import show_navbar
+from utils.ui_components import centered_header, section_title, timeline_step, info_block
 
-st.set_page_config(layout="wide")
-st.title("Claims Lifecycle")
+show_navbar()
+centered_header("Claims Lifecycle")
 
-st.markdown("""
-The Claims Lifecycle represents the full financial journey of a healthcare encounter—from documentation 
-to reimbursement. Understanding this lifecycle helps reduce denials and streamline revenue operations.
-""")
+section_title("The Life of a Healthcare Claim")
+timeline_step(1, "Charge Capture", "Translate services into billable CPT/HCPCS codes.")
+timeline_step(2, "Claim Creation", "Build an EDI 837 claim with codes, units, modifiers, NPI.")
+timeline_step(3, "Claim Scrubbing", "Check for coding errors, missing data, payer rules.")
+timeline_step(4, "Claim Submission", "Sent electronically to payer.")
+timeline_step(5, "Adjudication", "Payer verifies coverage, coding accuracy, medical necessity.")
+timeline_step(6, "Payment or Denial", "Determined using fee schedules and payer rules.")
+timeline_step(7, "Appeals", "Correct errors or challenge clinical denials.")
+timeline_step(8, "Collections", "Patient and payer balances are pursued.")
 
-st.markdown("---")
-st.header("1. Clinical Documentation")
-
-st.markdown("""
-Accurate documentation by providers is the foundation of successful billing.  
-Documentation must support medical necessity, coding, and payer requirements.
-""")
-
-st.markdown("""
-Examples of required documentation:
-- Diagnoses  
-- Procedures  
-- Medications  
-- Time-based services  
-- Imaging and lab reports  
-""")
-
-st.markdown("---")
-st.header("2. Medical Coding")
-
-st.markdown("""
-Coding translates clinical work into standardized billing codes.
-""")
-
-col1, col2 = st.columns(2)
-with col1:
-    st.subheader("ICD-10-CM")
-    st.markdown("Represents diagnoses and conditions.")
-
-with col2:
-    st.subheader("CPT / HCPCS")
-    st.markdown("""
-    CPT: Procedures performed  
-    HCPCS: Drugs, supplies, and additional services  
-    """)
-
-st.markdown("---")
-st.header("3. Charge Capture")
-
-st.markdown("""
-Charge capture ensures that all provider services are converted into billable charges.  
-Missed charges result in lost revenue.
-""")
-
-st.markdown("---")
-st.header("4. Claim Creation")
-
-st.markdown("""
-Claims are generated using standard formats:
-- CMS-1500 (professional claims)  
-- UB-04 (facility claims)  
-""")
-
-st.markdown("""
-Claims must include:
-- Patient demographics  
-- Insurance information  
-- Diagnosis codes  
-- Procedure codes  
-- Provider information  
-""")
-
-st.markdown("---")
-st.header("5. Claim Submission")
-
-st.markdown("""
-Claims are transmitted to the payer through a clearinghouse.  
-Clearinghouses check for formatting errors before submitting to the payer.
-""")
-
-st.markdown("---")
-st.header("6. Payer Adjudication")
-
-st.markdown("""
-Payers evaluate the claim based on:
-- Coverage rules  
-- Medical necessity  
-- Allowed amounts  
-- Fee schedules  
-- Coordination of benefits  
-""")
-
-st.markdown("""
-Possible outcomes:
-- Paid  
-- Partially paid  
-- Denied  
-- Additional information requested  
-""")
-
-st.markdown("---")
-st.header("7. Payment Posting")
-
-st.markdown("""
-Payments and adjustments are posted using an ERA (Electronic Remittance Advice).  
-Patient responsibility (copay, deductible, coinsurance) is also recorded.
-""")
-
-st.markdown("---")
-st.header("8. Denial Management")
-
-st.markdown("""
-Denied claims must be corrected and resubmitted.  
-This is one of the most resource-intensive RCM tasks.
-""")
-
-st.markdown("""
-Common denial reasons include:
-- Eligibility issues  
-- Missing authorization  
-- Coding errors  
-- Non-covered services  
-""")
-
-st.markdown("---")
-st.header("9. Patient Billing")
-
-st.markdown("""
-Patients receive a statement for their share of the cost after insurance processes the claim.  
-Clear communication improves patient satisfaction and reduces confusion.
-""")
-
-st.markdown("---")
-st.header("Why Understanding the Claims Lifecycle Matters")
-
-st.markdown("""
-- Improves clean claim rates  
-- Reduces rework  
-- Speeds up reimbursement  
-- Supports better compliance  
+info_block("""
+Understanding this lifecycle is essential for preventing denials and accelerating payment.
 """)
