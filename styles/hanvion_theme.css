@@ -1,6 +1,30 @@
+/* GLOBAL HANVION THEME */
 
-body {background-color: #f8fafc;}
-.block-container {padding-top: 2rem;}
-h1, h2, h3 {color: #0EA5E9;}
-.sidebar .sidebar-content {background: linear-gradient(180deg, #0EA5E9, #2563EB);}
-    
+body {
+    background-color: #F7FAFC;
+    font-family: "Inter", sans-serif;
+}
+
+/* Remove Sidebar */
+[data-testid="stSidebar"] {
+    display: none !important;
+}
+[data-testid="stSidebarNav"] {
+    display: none !important;
+}
+[data-testid="collapsedControl"] {
+    display: none !important;
+}
+
+/* Card Style */
+.hanvion-card {
+    border: 1px solid #E2E8F0;
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.hanvion-card:hover {
+    border-color: #2A7FDB;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
