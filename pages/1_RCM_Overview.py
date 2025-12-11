@@ -1,69 +1,29 @@
-from utils.navigation import show_navbar
-show_navbar()
 import streamlit as st
+from utils.navigation import show_navbar
+from utils.ui_components import centered_header, section_title, timeline_step, info_block
 
-st.set_page_config(layout="wide")
+show_navbar()
+centered_header("RCM Overview")
 
-st.title("RCM Overview")
-
-st.markdown("""
-This module provides a clear explanation of the end-to-end revenue cycle,  
-from patient intake through final reimbursement.  
-It is designed for training users who need to understand the complete workflow  
-supporting patient access and financial clearance.
+section_title("What is Revenue Cycle Management?")
+st.write("""
+Revenue Cycle Management (RCM) is the end-to-end financial process that ensures healthcare
+providers get paid for the services they deliver. It covers every step from scheduling to
+final collections.
 """)
 
-st.markdown("---")
+section_title("Full RCM Workflow")
+timeline_step(1, "Patient Access", "Scheduling, registration, coverage & eligibility checks.")
+timeline_step(2, "Authorization", "Review prior authorization requirements and obtain approvals.")
+timeline_step(3, "Service Delivery", "Clinical encounter, documentation, and coding readiness.")
+timeline_step(4, "Coding & Charge Entry", "Translate documentation into CPT/ICD codes.")
+timeline_step(5, "Claim Submission", "Generate and submit EDI 837 claim to the payer.")
+timeline_step(6, "Payer Adjudication", "Payer reviews coding, coverage, medical necessity.")
+timeline_step(7, "Payment Posting", "Payment posted using 835 ERA or manual posting.")
+timeline_step(8, "Denials & Appeals", "Fix errors, resubmit claims, or appeal medical denials.")
+timeline_step(9, "Collections", "Follow-up on aged AR and patient balances.")
 
-st.header("What Is the Revenue Cycle?")
-
-st.markdown("""
-The revenue cycle is the full administrative and financial process that a patient encounter follows.  
-It includes scheduling, eligibility verification, prior authorization, documentation, coding, billing,  
-payers' adjudication, reimbursement, and appeals.
-
-A strong revenue cycle ensures:
-- Accurate claims  
-- Faster reimbursement  
-- Fewer denials  
-- Clear communication to patients  
+info_block("""
+Understanding each stage helps prevent denials, accelerate reimbursement,
+and improve financial performance.
 """)
-
-st.markdown("---")
-
-sections = [
-    ("1. Scheduling & Registration",
-     "Collect demographics, insurance information, referral details, and reason for visit."),
-
-    ("2. Eligibility & Benefits Verification",
-     "Confirm coverage, network status, deductible, copay, and coinsurance."),
-
-    ("3. Prior Authorization",
-     "Determine if the service or therapy requires payer approval before treatment."),
-
-    ("4. Documentation & Coding",
-     "Ensure correct ICD-10 diagnosis codes, CPT/HCPCS procedure codes, and medical necessity documentation."),
-
-    ("5. Claim Creation",
-     "Generate the claim with all required codes, modifiers, units, and provider details."),
-
-    ("6. Claim Submission & Adjudication",
-     "Submit electronically to the payer. The payer evaluates coverage, contracts, and benefit rules."),
-
-    ("7. Payment Posting",
-     "Payer issues payment or denial. Payments are posted and matched to accounts."),
-
-    ("8. Denials & Appeals",
-     "Analyze denial reasons and submit appeal packets or corrected claims."),
-
-    ("9. Patient Billing",
-     "Generate statements based on remaining balances, copays, and deductibles.")
-]
-
-for title, text in sections:
-    with st.expander(title):
-        st.write(text)
-
-st.markdown("---")
-
-st.write("Use the navigation menu or Home page to explore detailed modules on each component of the revenue cycle.")
