@@ -1,5 +1,18 @@
 import streamlit as st
 
+st.set_page_config(layout="wide")
+
+# ---- HIDE STREAMLIT DEFAULT SIDEBAR ----
+hide_sidebar_style = """
+    <style>
+        section[data-testid="stSidebar"] {display: none;}
+        div[data-testid="collapsedControl"] {display: none;}
+    </style>
+"""
+st.markdown(hide_sidebar_style, unsafe_allow_html=True)
+
+import streamlit as st
+
 # -------------------------------------------------------
 # BASIC PAGE SETUP
 # -------------------------------------------------------
