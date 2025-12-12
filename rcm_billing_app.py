@@ -236,3 +236,155 @@ if st.button("Estimate Denial Risk"):
         st.error("High risk of denial. Documentation, prior auth, or coding may need review.")
 
     st.caption("This denial risk is a demo-only heuristic and not a guarantee of payment or denial.")
+    import streamlit as st
+
+# -----------------------------
+# RCM AT A GLANCE
+# -----------------------------
+st.subheader("📊 Revenue Cycle Management — At a Glance")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("**What**")
+    st.write("End-to-end process managing healthcare revenue from patient registration to final payment.")
+
+with col2:
+    st.markdown("**Why**")
+    st.write("Ensures financial stability, reduces revenue leakage, and improves patient billing experience.")
+
+with col3:
+    st.markdown("**Who**")
+    st.write("Providers, payers, billing teams, coders, and patients.")
+
+st.divider()
+
+# -----------------------------
+# RCM LIFECYCLE (EXPANDABLE)
+# -----------------------------
+st.subheader("🔄 Revenue Cycle Management Lifecycle")
+
+with st.expander("View RCM Lifecycle Steps"):
+    st.markdown("""
+    **1️⃣ Patient Scheduling & Registration**  
+    Capture accurate patient demographics and insurance details.
+
+    **2️⃣ Insurance Eligibility & Authorization**  
+    Verify coverage and obtain prior authorizations before services.
+
+    **3️⃣ Clinical Documentation**  
+    Providers document diagnoses and procedures during care delivery.
+
+    **4️⃣ Medical Coding (ICD-10, CPT, HCPCS)**  
+    Translate clinical documentation into standardized medical codes.
+
+    **5️⃣ Claim Submission**  
+    Submit clean claims to payers for reimbursement.
+
+    **6️⃣ Payer Adjudication**  
+    Payers review claims and determine payment responsibility.
+
+    **7️⃣ Denial Management**  
+    Identify, correct, and resubmit denied or underpaid claims.
+
+    **8️⃣ Payment Posting**  
+    Record payments from insurance and patients.
+
+    **9️⃣ Patient Billing & Collections**  
+    Generate patient statements and manage outstanding balances.
+    """)
+
+st.divider()
+
+# -----------------------------
+# WHY RCM MATTERS
+# -----------------------------
+st.subheader("🏥 Why Revenue Cycle Management Matters")
+
+st.markdown("""
+- Reduces claim denials and payment delays  
+- Improves cash flow and financial predictability  
+- Prevents revenue leakage  
+- Enhances patient trust through transparent billing  
+- Supports regulatory compliance and audit readiness  
+""")
+
+st.divider()
+
+# -----------------------------
+# KEY RCM METRICS (DEMO KPIs)
+# -----------------------------
+st.subheader("📈 Key RCM Performance Indicators")
+
+kpi1, kpi2, kpi3 = st.columns(3)
+
+kpi1.metric("Days in A/R", "42 days")
+kpi2.metric("Clean Claim Rate", "94%")
+kpi3.metric("Denial Rate", "6%")
+
+kpi4, kpi5, kpi6 = st.columns(3)
+
+kpi4.metric("First-Pass Resolution", "88%")
+kpi5.metric("Net Collection Rate", "97%")
+kpi6.metric("Patient Responsibility %", "18%")
+
+st.caption("⚠️ Metrics shown are demo values for educational purposes only.")
+
+st.divider()
+
+# -----------------------------
+# PATIENT EXPERIENCE SECTION
+# -----------------------------
+st.subheader("👤 RCM & Patient Experience")
+
+st.markdown("""
+Modern Revenue Cycle Management focuses on **patient-centered billing** by:
+- Providing cost estimates before care  
+- Reducing billing surprises  
+- Offering transparent statements  
+- Enabling flexible payment options  
+""")
+
+st.divider()
+
+# -----------------------------
+# CAREER PATHWAYS IN RCM
+# -----------------------------
+st.subheader("💼 Careers in Revenue Cycle Management")
+
+st.markdown("""
+- Revenue Cycle Analyst  
+- Medical Coder / Auditor  
+- Billing & AR Specialist  
+- Denial Management Analyst  
+- Revenue Integrity Analyst  
+- Healthcare Data Analyst  
+""")
+
+st.divider()
+
+# -----------------------------
+# FUTURE ENHANCEMENTS
+# -----------------------------
+st.subheader("🚀 Future Enhancements")
+
+st.markdown("""
+- Real-time insurance eligibility simulation (270/271)  
+- AI-assisted denial prediction  
+- Cost-of-care estimation for patients  
+- Specialty-specific RCM dashboards  
+- Integration with EHR and claims datasets  
+""")
+
+st.divider()
+
+# -----------------------------
+# REFERENCES
+# -----------------------------
+st.subheader("📚 References")
+
+st.markdown("""
+- Tulane University School of Public Health – Revenue Cycle Management in Healthcare  
+- athenahealth – What is Healthcare Revenue Cycle Management?
+""")
+
