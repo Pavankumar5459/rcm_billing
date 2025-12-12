@@ -378,13 +378,5 @@ st.markdown("""
 
 st.divider()
 
-# -----------------------------
-# REFERENCES
-# -----------------------------
-st.subheader("📚 References")
 
-st.markdown("""
-- Tulane University School of Public Health – Revenue Cycle Management in Healthcare  
-- athenahealth – What is Healthcare Revenue Cycle Management?
-""")
 
